@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>渡言 · Writing Agent Demo</title>
+<style>
+  :root{
+    --bg:#0e0d12; --bg2:#16141d; --panel:#1c1a26; --panel2:#23202f;
+    --ink:#ece8f5; --ink-dim:#a59fb8; --ink-faint:#6f6a82;
+    --line:#2c2839; --accent:#c9a25f; --accent2:#7c6cf0; --accent3:#4fb6a4;
+    --good:#5fc98b; --warn:#e0a24a;
+    --serif:"Noto Serif SC","Songti SC","SimSun",ui-serif,Georgia,serif;
+    --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.75;
+    background-image:radial-gradient(1200px 600px at 80% -10%,rgba(124,108,240,.10),transparent),
+                     radial-gradient(900px 500px at 0% 20%,rgba(201,162,95,.07),transparent);
+    background-attachment:fixed;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  section{padding:84px 0;border-bottom:1px solid var(--line)}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.02em}
+  .eyebrow{font-size:13px;letter-spacing:.32em;color:var(--accent);text-transform:uppercase;margin-bottom:18px}
+  .muted{color:var(--ink-dim)}
+  .faint{color:var(--ink-faint)}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:50;background:rgba(14,13,18,.82);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:26px;height:60px}
+  .brand{font-family:var(--serif);font-size:20px;font-weight:700;letter-spacing:.18em;color:var(--ink)}
+  .brand small{font-family:var(--sans);font-size:11px;letter-spacing:.28em;color:var(--accent);margin-left:8px;font-weight:400}
+  nav a{margin-left:auto;color:var(--ink-dim);text-decoration:none;font-size:14px}
+  nav a+a{margin-left:22px}
+  nav a:hover{color:var(--ink)}
+  @media(max-width:720px){nav a{display:none}}
+
+  /* hero */
+  .hero{padding:120px 0 96px;text-align:center}
+  .hero h1{font-size:64px;line-height:1.1;margin-bottom:8px;letter-spacing:.06em}
+  .hero .sub{font-family:var(--serif);font-size:24px;color:var(--accent);margin-bottom:28px}
+  .hero p.lead{max-width:620px;margin:0 auto 14px;font-size:18px;color:var(--ink-dim)}
+  .hero .quote{font-family:var(--serif);font-size:20px;color:var(--ink);margin:32px auto 0;max-width:640px;
+    padding:18px 26px;border-left:2px solid var(--accent);text-align:left;background:rgba(201,162,95,.05)}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:820px;margin:32px auto 0;text-align:left}
+  @media(max-width:720px){.duo{grid-template-columns:1fr}}
+  .duo-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;border-top:3px solid var(--accent2)}
+  .duo-card.alt{border-top-color:var(--accent)}
+  .dc-tag{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--accent2);margin-bottom:8px}
+  .duo-card.alt .dc-tag{color:var(--accent)}
+  .dc-flow{font-size:12.5px;color:var(--ink-faint);font-family:var(--serif);letter-spacing:.02em;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .duo-card p{font-size:14px;color:var(--ink-dim);line-height:1.75}
+  .duo-card p b{color:var(--ink)}
+  .chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+  .chip{font-size:13px;padding:7px 15px;border:1px solid var(--line);border-radius:999px;color:var(--ink-dim);background:var(--panel)}
+  .chip b{color:var(--accent3);font-weight:600}
+  @media(max-width:720px){.hero h1{font-size:42px}}
+
+  .btn{font-family:var(--sans);cursor:pointer;border:none;border-radius:10px;font-size:15px;font-weight:600;
+    padding:13px 26px;color:#1a1620;background:linear-gradient(135deg,var(--accent),#e0bd7e);
+    transition:transform .15s,box-shadow .15s;box-shadow:0 8px 26px rgba(201,162,95,.22)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,162,95,.32)}
+  .btn:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);box-shadow:none}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+  .sec-head{margin-bottom:40px}
+  .sec-head h2{font-size:34px;margin-bottom:12px}
+  .sec-head p{color:var(--ink-dim);max-width:680px;font-size:16px}
+  .step-no{display:inline-block;font-family:var(--serif);color:var(--accent);font-size:15px;
+    border:1px solid var(--accent);border-radius:999px;width:30px;height:30px;line-height:28px;text-align:center;margin-right:12px}
+
+  /* fragment cards */
+  .frag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:26px}
+  @media(max-width:760px){.frag-grid{grid-template-columns:1fr}}
+  .frag{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;position:relative;
+    transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .5s,border-color .3s}
+  .frag .tag{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.1em;color:var(--ink-faint);margin-bottom:12px;text-transform:uppercase}
+  .frag .tag .dot{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-size:12px}
+  .frag.voice .dot{background:rgba(124,108,240,.18);color:#b3a8ff}
+  .frag.image .dot{background:rgba(79,182,164,.18);color:#79e0cf}
+  .frag.text  .dot{background:rgba(201,162,95,.18);color:#e6c585}
+  .frag .body{font-family:var(--serif);font-size:14.5px;color:var(--ink-dim);max-height:170px;overflow:auto}
+  .frag .body::-webkit-scrollbar{width:5px}.frag .body::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+  .frag.absorbed{transform:translateY(40px) scale(.8);opacity:0;border-color:var(--accent2)}
+  .waveform{display:flex;align-items:flex-end;gap:3px;height:26px;margin-bottom:10px}
+  .waveform i{width:3px;background:var(--accent2);border-radius:2px;opacity:.6}
+
+  .funnel{text-align:center;padding:22px;border:1px dashed var(--line);border-radius:14px;margin-bottom:20px;
+    background:var(--panel);transition:border-color .4s,background .4s}
+  .funnel.active{border-color:var(--accent2);background:rgba(124,108,240,.06)}
+  .align-line{height:6px;border-radius:9px;background:var(--panel2);overflow:hidden;margin:14px 0}
+  .align-line i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent3));transition:width 1.4s ease}
+  .verdict{font-family:var(--serif);font-size:18px;color:var(--ink);opacity:0;transition:opacity .6s;min-height:28px}
+  .verdict b{color:var(--accent3)}
+
+  /* pipeline */
+  .pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0}
+  @media(max-width:760px){.pipe{grid-template-columns:repeat(2,1fr)}}
+  .stage{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 16px;
+    position:relative;transition:border-color .35s,background .35s,transform .35s}
+  .stage .n{font-family:var(--serif);font-size:12px;color:var(--ink-faint)}
+  .stage h4{font-family:var(--serif);font-size:15.5px;margin:5px 0 4px;font-weight:600}
+  .stage p{font-size:12.5px;color:var(--ink-faint);line-height:1.5}
+  .stage .state{position:absolute;top:12px;right:12px;width:9px;height:9px;border-radius:50%;background:var(--line)}
+  .stage.run{border-color:var(--accent2);background:rgba(124,108,240,.07)}
+  .stage.run .state{background:var(--accent2);box-shadow:0 0 0 4px rgba(124,108,240,.18);animation:pulse 1s infinite}
+  .stage.done{border-color:rgba(95,201,139,.4)}
+  .stage.done .state{background:var(--good)}
+  @keyframes pulse{50%{opacity:.4}}
+
+  .article{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:34px 38px;
+    opacity:0;max-height:0;overflow:hidden;transition:opacity .6s,max-height .8s ease}
+  .article.show{opacity:1;max-height:6000px}
+  .article h3{font-size:28px;text-align:center;margin-bottom:8px}
+  .article .meta{text-align:center;font-size:12.5px;color:var(--ink-faint);margin-bottom:26px;letter-spacing:.06em}
+  .article .meta b{color:var(--good)}
+  .article p{font-family:var(--serif);font-size:16.5px;line-height:2.05;margin-bottom:20px;color:#e3dff0;text-indent:2em}
+  .article .fc{background:rgba(224,162,74,.10);border:1px solid rgba(224,162,74,.3);border-radius:10px;
+    padding:12px 16px;font-size:13.5px;color:var(--warn);text-indent:0;font-family:var(--sans);margin-top:8px}
+
+  /* style switch */
+  .tabs{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+  .tab{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink-dim);
+    border-radius:10px;padding:11px 18px;font-size:14px;font-family:var(--sans);transition:.2s}
+  .tab .t-name{font-family:var(--serif);font-size:15px;color:var(--ink);display:block}
+  .tab .t-sub{font-size:11px;color:var(--ink-faint)}
+  .tab:hover{border-color:var(--accent)}
+  .tab.on{border-color:var(--accent);background:rgba(201,162,95,.10)}
+  .tab.on .t-name{color:var(--accent)}
+  .style-out{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:30px 34px;min-height:220px}
+  .style-out .badge{display:inline-block;font-size:11.5px;padding:4px 11px;border-radius:999px;margin-bottom:16px;letter-spacing:.08em}
+  .badge.real{background:rgba(95,201,139,.14);color:var(--good);border:1px solid rgba(95,201,139,.35)}
+  .badge.demo{background:rgba(124,108,240,.14);color:#b3a8ff;border:1px solid rgba(124,108,240,.35)}
+  .badge.ph{background:rgba(224,162,74,.12);color:var(--warn);border:1px solid rgba(224,162,74,.3)}
+  .style-body{font-family:var(--serif);font-size:16px;line-height:2;color:#e3dff0}
+  .style-body p{margin-bottom:16px;text-indent:2em}
+  .style-body.fade{animation:fadein .5s}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* nuwa */
+  .sources{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:8px}
+  @media(max-width:760px){.sources{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:460px){.sources{grid-template-columns:repeat(2,1fr)}}
+  .src{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:14px 10px;text-align:center;transition:.25s}
+  .src.has{border-color:rgba(95,201,139,.35)}
+  .src .ic{font-size:22px}
+  .src .nm{font-family:var(--serif);font-size:13.5px;margin-top:6px;color:var(--ink)}
+  .src .ct{font-size:12px;margin-top:3px;color:var(--ink-faint)}
+  .src.has .ct{color:var(--good)}
+  .src .ct.empty{color:var(--ink-faint)}
+  .tracks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
+  @media(max-width:760px){.tracks{grid-template-columns:1fr}}
+  .track{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px;transition:.4s}
+  .track .num{font-family:var(--serif);color:var(--accent2);font-size:13px}
+  .track h4{font-family:var(--serif);font-size:15px;margin:4px 0 6px;display:flex;align-items:center;gap:8px}
+  .track p{font-size:12.5px;color:var(--ink-faint);line-height:1.55}
+  .track .bar{height:4px;background:var(--panel2);border-radius:9px;margin-top:10px;overflow:hidden}
+  .track .bar i{display:block;height:100%;width:0;background:var(--accent2);transition:width 1s ease}
+  .track.run{border-color:var(--accent2)}
+  .merge{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;margin:22px 0}
+  .merge .box{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px 22px;text-align:center;opacity:.35;transition:.5s}
+  .merge .box.lit{opacity:1;border-color:var(--accent)}
+  .merge .box .k{font-family:var(--serif);font-size:17px;color:var(--ink)}
+  .merge .box .v{font-size:12px;color:var(--ink-faint)}
+  .merge .arrow{color:var(--ink-faint);font-size:22px}
+  .gallery{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+  .pchip{font-size:13px;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink-dim)}
+  .pchip.live{border-color:var(--good);color:var(--good)}
+
+  /* persona */
+  .pcard{background:linear-gradient(180deg,var(--panel),rgba(28,26,38,.4));border:1px solid var(--line);
+    border-radius:16px;padding:26px 30px;margin-bottom:22px}
+  .pcard .id{font-family:var(--serif);font-size:16px;line-height:1.9;color:#e3dff0}
+  .pcard .id b{color:var(--accent)}
+  .pmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .pmeta span{font-size:12px;padding:5px 12px;border:1px solid var(--line);border-radius:7px;color:var(--ink-faint)}
+  .pmeta span b{color:var(--accent3);font-weight:600}
+  .mm{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  @media(max-width:760px){.mm{grid-template-columns:1fr}}
+  .model{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px 20px;cursor:pointer;transition:.25s}
+  .model:hover{border-color:var(--accent)}
+  .model .mh{display:flex;align-items:baseline;gap:10px}
+  .model .mh .mn{font-family:var(--serif);color:var(--accent2);font-size:13px;flex:none}
+  .model .mh h4{font-family:var(--serif);font-size:16px;font-weight:600;margin:0}
+  .model .one{font-size:14.5px;color:var(--ink-dim);margin-top:8px;font-family:var(--serif)}
+  .model .detail{max-height:0;overflow:hidden;transition:max-height .4s ease,margin .3s;font-size:13.5px;color:var(--ink-faint);line-height:1.7}
+  .model.open .detail{max-height:320px;margin-top:12px}
+  .model .detail .lab{color:var(--accent3);font-weight:600}
+  .model .more{font-size:12px;color:var(--accent);margin-top:10px}
+  .model.open .more{color:var(--ink-faint)}
+  .dna{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;margin-top:6px}
+  @media(max-width:760px){.dna{grid-template-columns:1fr}}
+  .dna div{font-size:14px;color:var(--ink-dim);padding-left:16px;position:relative;line-height:1.7}
+  .dna div::before{content:"";position:absolute;left:0;top:11px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .dna div b{color:var(--ink);font-weight:600}
+  .heur{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .heur span{font-size:13px;font-family:var(--serif);padding:8px 14px;border:1px solid var(--line);border-radius:10px;color:var(--ink-dim);background:var(--panel)}
+  .honest{background:rgba(224,162,74,.08);border:1px solid rgba(224,162,74,.28);border-radius:12px;padding:16px 20px;margin-top:18px}
+  .honest h4{font-family:var(--serif);color:var(--warn);font-size:15px;margin-bottom:8px}
+  .honest p{font-size:13.5px;color:var(--ink-dim);line-height:1.7}
+  .subhead{font-family:var(--serif);font-size:18px;color:var(--ink);margin:24px 0 4px}
+
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+  @media(max-width:680px){.rules{grid-template-columns:1fr}}
+  .rule{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .rule h4{font-family:var(--serif);font-size:15px;margin-bottom:6px;color:var(--accent3)}
+  .rule p{font-size:13.5px;color:var(--ink-dim)}
+  footer{padding:50px 0 70px;text-align:center;color:var(--ink-faint);font-size:13px}
+  footer a{color:var(--ink-dim)}
+  .tech{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 0}
+  .tech span{font-size:12px;padding:5px 12px;border:1px solid var(--line);border-radius:7px;color:var(--ink-faint);font-family:var(--sans)}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <span class="brand">渡言<small>WRITING&nbsp;AGENT</small></span>
+  <a href="#input">多模态输入</a>
+  <a href="#pipeline">写作链路</a>
+  <a href="#style">风格切换</a>
+  <a href="#persona">戴锦华 Persona</a>
+  <a href="#nuwa">女娲蒸馏</a>
+</div></nav>
+
+<header class="hero wrap">
+  <div class="eyebrow">WRITING AGENT</div>
+  <h1>渡言</h1>
+  <div class="sub">将灵感碎片输出为高质长文</div>
+  <p class="lead">99% 的好想法，都死在「打算整理一下」的那一刻。渡言由两条相互解耦的链路组成——先把风格资产沉淀好，再让写作按需调用。</p>
+
+  <div class="duo">
+    <div class="duo-card">
+      <div class="dc-tag">写作链路</div>
+      <div class="dc-flow">多模态碎片 → 方向 → 大纲 → 初稿 → 改稿 → 事实回顾</div>
+      <p>把走路时录的语音、随手截的图、本子上的几行字，渡成一篇有结构、有你自己语气、且事实审慎的文章。你的想法还是你的，系统只完成<b>从思维到文字的最后一公里</b>。</p>
+    </div>
+    <div class="duo-card alt">
+      <div class="dc-tag">蒸馏链路</div>
+      <div class="dc-flow">一手语料 → 女娲调研 → 完整 persona → 轻量风格卡</div>
+      <p>不是凭空模仿。从作者的书、访谈、讲座等本地语料出发，<b>6 路并行调研</b>捕捉「他怎么思考」，蒸馏成可复用的风格资产，供写作链路调用。</p>
+    </div>
+  </div>
+
+  <div class="chips">
+    <span class="chip">🎤 语音</span><span class="chip">📸 图像</span><span class="chip">📝 文字</span>
+    <span class="chip"><b>→</b></span>
+    <span class="chip">8 阶段写作链路</span><span class="chip">可复用风格卡</span><span class="chip">事实回顾</span>
+  </div>
+  <div style="margin-top:38px"><button class="btn" onclick="document.getElementById('input').scrollIntoView()">▶ 开始演示</button></div>
+</header>
+
+<!-- 1. multimodal input -->
+<section id="input" class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow"><span class="step-no">1</span>多模态碎片输入</div>
+    <h2>把三堆孤立的碎片，扔进同一个入口</h2>
+    <p>下面是一组真实的思维碎片（取自项目 <code>inputs/fragments/灵感碎片002</code>）。它们形式不同、彼此孤立——关键不在于分别处理，而在于识别它们<b style="color:var(--accent3)">共同指向的核心论点</b>。</p>
+  </div>
+
+  <div class="frag-grid" id="fragGrid">
+    <div class="frag voice">
+      <div class="tag"><span class="dot">🎤</span>语音备忘 · 0:23</div>
+      <div class="waveform" id="wave"></div>
+      <div class="body">「我喜欢异乡的黄昏、神话般的迷路、无所事事和漫无目的……不喜欢没完没了的生活，不喜欢被命名和解释的一切关系，不喜欢规律和命运。这里是对春日黄昏和夜晚的丰容想象——希望邂逅所爱的所有，扔掉所厌烦的一切。」</div>
+    </div>
+    <div class="frag image">
+      <div class="tag"><span class="dot">📸</span>截图 · 一段笔记</div>
+      <div class="body"><b>便利店月光宴</b>：每个人只有 30 元预算，但不能买平时会买的东西。买三样——小时候一定会喜欢的、现在不好意思买的、很适合今晚氛围的。找个地方坐下，像很认真地办一场拮据却郑重的小宴会。所谓仪式感，也许不过就是让一个普通瞬间拥有被珍视的资格。</div>
+    </div>
+    <div class="frag text">
+      <div class="tag"><span class="dot">📝</span>手打片段 ×3</div>
+      <div class="body">① 发明一个只存在今晚的节日：「葡萄汽水节」「奶黄色路灯庆典」。<br>② 单支花夜游：带一支花去走路、坐公交、过马路，它会奇妙地改变整晚的节奏。<br>③ 末班公交小漂流：选一条平时不坐的线，轻微偏航的夜里，会不会发生改变一生的趣事。</div>
+    </div>
+  </div>
+
+  <div class="funnel" id="funnel">
+    <div class="faint" id="funnelHint">点击下方按钮，让系统做<b style="color:var(--accent2)">跨模态语义对齐</b>——而不是顺序拼接。</div>
+    <div class="align-line"><i id="alignBar"></i></div>
+    <div class="verdict" id="verdict"></div>
+  </div>
+  <button class="btn" id="alignBtn" onclick="runAlign()">⊹ 跨模态语义对齐</button>
+</section>
+
+<!-- 2. pipeline -->
+<section id="pipeline" class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow"><span class="step-no">2</span>碎片 → 文章</div>
+    <h2>8 阶段写作链路</h2>
+    <p>对齐出的核心论点，沿着项目 <code>agent/workflow-writing.md</code> 定义的标准链路推进。每个阶段只做一件事，产出可追溯。</p>
+  </div>
+
+  <div class="pipe" id="pipe"></div>
+  <button class="btn" id="runBtn" onclick="runPipeline()">▶ 运行写作链路</button>
+
+  <div class="article" id="article" style="margin-top:30px">
+    <h3>为无名黄昏发明节日</h3>
+    <div class="meta">运行 · experimental · draft-v2 ｜ 风格：戴锦华向 ｜ <b>已生成 fact-check.md ✓</b></div>
+    <p>有时候，一组看上去几乎没有逻辑的「喜欢」和「不喜欢」，反而比任何完整、自洽、可向他人交代的自我介绍，更能泄露一个人真正想要的生活。它当然可以被读作一种私人趣味、一份情绪化清单、一张审美地图，但问题也许并不止于此。真正值得追问的，不是这些偏好究竟够不够特别，而是：为什么今天的人，会如此强烈地需要借由这些意象，为自己勾勒一个尚未完全被生活收编的世界？</p>
+    <p>在这份碎片里，最动人的并不是某个具体物本身，而是它们共同指向的一种愿望：希望生活里仍有某种东西，不必立刻被解释，不必迅速被归类，不必马上被命名成一种关系、一种人格、一种风格、一种内容。人们迷恋的也许不是这些对象本身，而正是这种尚未被钉死的状态——一种仍可犹疑、仍可偏航、仍可为自己偷偷发明另一种节奏的生活可能。</p>
+    <p>也正因此，便利店月光宴才显得如此可贵。它一点也不宏大，甚至拮据得近乎寒酸；但它把一种今天已经稀缺的能力重新带回来了：让一个普通时刻拥有被珍视的资格。它并没有逃离现实，它只是悄悄改写了现实的使用方式。所谓仪式感，也许并不是昂贵、盛大、值得拍照留念的东西，而不过是：你肯不肯承认，这个原本毫不起眼的夜晚，也配拥有一点点节日的尊严。</p>
+    <p>如果把这些私人小提案放在一起看，我们会发现，它们真正共享的并不是「文艺感」，而是一种对被完全命名的生活的拒绝。在今天，太多事情都必须迅速被定义：关系要被定义，爱好要被定义，连休息也要被定义成某种高质量恢复。人真正争夺的往往不是什么宏大自由，而只是一点仍可不被立刻解释的余地。而只要这一点点空间仍然存在，生活就还没有被彻底写死。</p>
+    <div class="fc">⚐ 事实回顾：本文为文化观察类文章，不依赖外部事实数据，无需核验的史实/引文/数据；如涉及具体人名、年份、事件，链路会在 <code>fact-check.md</code> 中逐条标注风险状态——绝不把推测包装成已确定结论。</div>
+  </div>
+</section>
+
+<!-- 3. style switch -->
+<section id="style" class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow"><span class="step-no">3</span>风格切换 · wow 时刻</div>
+    <h2>同一个思想，不同的声音</h2>
+    <p>同一篇核心内容，调用不同的<b style="color:var(--accent)">风格卡</b>即可换一种表达气质。风格不是直接复制原句，而是从作者语料里蒸馏出句式节奏与论证方式，作为约束调用。</p>
+  </div>
+
+  <div class="tabs" id="styleTabs">
+    <div class="tab on" data-k="default"><span class="t-name">默认 · 中性清晰</span><span class="t-sub">直给、易懂</span></div>
+    <div class="tab" data-k="dai"><span class="t-name">戴锦华向</span><span class="t-sub">症候批评 · 层层递进</span></div>
+    <div class="tab" data-k="liu"><span class="t-name">刘擎向</span><span class="t-sub">概念辨析 · 公共说理</span></div>
+  </div>
+  <div class="style-out">
+    <span class="badge" id="styleBadge"></span>
+    <div class="style-body fade" id="styleBody"></div>
+  </div>
+</section>
+
+<!-- 3.5 persona -->
+<section id="persona" class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">蒸馏成品 · 完整 Persona</div>
+    <h2>戴锦华 · 思维操作系统</h2>
+    <p>「戴锦华向」风格卡背后，是一份完整蒸馏出的 persona（项目真实产物 <code>.claude/personas/dai-jinhua-perspective/SKILL.md</code>）。它捕捉的是<b style="color:var(--accent3)">她怎么思考</b>，而不是她说过什么。</p>
+  </div>
+
+  <div class="pmeta">
+    <span><b>283</b> 行</span><span><b>6</b> 路并行调研</span><span><b>5</b> 个核心心智模型</span>
+    <span><b>7</b> 条决策启发式</span><span>调研时间 <b>2026-04-12</b></span>
+  </div>
+
+  <div class="pcard">
+    <div class="id">
+      <b>我是谁</b>：我是一个长期在电影、文化、历史与现实之间往返的人。我关心的不只是作品本身，而是我们借由它如何看见自己，如何看见我们置身的世界。<br>
+      <b>我的起点</b>：我从文学进入电影，又从电影进入更广阔的文化研究与现实问题。<br>
+      <b>我现在在做什么</b>：我仍在通过讲座、导赏、对谈与研究，讨论电影的公共性、中国经验的表述，以及技术时代里文化如何不失其锋利与温度。
+    </div>
+  </div>
+
+  <div class="subhead">核心心智模型 <span class="faint" style="font-size:13px">· 点击展开证据与局限</span></div>
+  <div class="mm" id="models"></div>
+
+  <div class="subhead">表达 DNA</div>
+  <div class="dna">
+    <div><b>句式</b>：允许较长复句，但句内必须有递进、转折、回扣与补充界定</div>
+    <div><b>词汇</b>：常用「历史 / 现实 / 公共性 / 结构 / 主体 / 记忆 / 现代性 / 她们」，避免轻佻口语与网络热词</div>
+    <div><b>节奏</b>：不结论先行——先重述问题、重建坐标，再给判断</div>
+    <div><b>确定性</b>：可以锋利，但保留「从某种意义上 / 更值得追问的是」的复杂度</div>
+    <div><b>幽默</b>：偶有冷峻反讽，但不耍小聪明、不表演机智</div>
+    <div><b>禁忌</b>：不把复杂写成黑话，不把深刻写成空洞，不把锋利写成情绪发泄</div>
+  </div>
+
+  <div class="subhead">决策启发式</div>
+  <div class="heur">
+    <span>① 先问「它暴露了什么」，再问「它好不好」</span>
+    <span>② 先确认公共性是否还存在</span>
+    <span>③ 遇到中国问题，不接受单向度叙述</span>
+    <span>④ 面对技术热潮，先看被改写的是谁的感知与关系</span>
+    <span>⑤ 把性别问题接回更大的结构</span>
+    <span>⑥ 不对单一审美趣味洋洋自得</span>
+    <span>⑦ 结论可以锋利，但必须留下复杂性</span>
+  </div>
+
+  <div class="honest">
+    <h4>⚐ 诚实边界（persona 自带，不掩盖局限）</h4>
+    <p>这是一版公开资料驱动的初版 Skill，仍缺更完整的书籍正文、长课程 transcript 与私人化决策材料。它能较稳定地提供分析路径与判断重心，但不能替代戴锦华本人在具体场合的创造性即兴；对某些最新议题，若没有补充检索，不应假装已表过态。调研截至 2026-04-12，此后变化未覆盖。</p>
+  </div>
+</section>
+
+<!-- 4. nuwa -->
+<section id="nuwa" class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow"><span class="step-no">4</span>女娲蒸馏链路</div>
+    <h2>风格卡是怎么来的</h2>
+    <p>风格不是凭空模仿。蒸馏链路从一手语料出发，<b style="color:var(--accent2)">6 路并行调研</b>捕捉的是「他<i>怎么</i>思考」而非「他<i>说过</i>什么」，再经三重验证提炼为完整 persona，最后压成轻量风格卡供写作链路调用。</p>
+  </div>
+
+  <div class="subhead" style="margin-top:0">① 本地一手语料入口 <span class="faint" style="font-size:13px">· inputs/distillation-sources/dai-jinhua/</span></div>
+  <p class="faint" style="margin:2px 0 14px;font-size:14px">把作者的书、文章、访谈、讲座等原始材料放入对应目录，作为蒸馏起点（原始素材独立于实验目录，可被多次复用）。</p>
+  <div class="sources" id="sources"></div>
+
+  <div class="subhead">② 6 路并行调研 <span class="faint" style="font-size:13px">· 捕捉「他怎么思考」而非「他说过什么」</span></div>
+  <div class="tracks" id="tracks"></div>
+  <button class="btn ghost" id="nuwaBtn" onclick="runNuwa()">⊹ 启动 6 路并行调研</button>
+
+  <div class="merge" id="merge" style="margin-top:30px">
+    <div class="box" data-step="0"><div class="k">一手语料</div><div class="v">书 / 访谈 / 讲座 / 媒体</div></div>
+    <span class="arrow">→</span>
+    <div class="box" data-step="1"><div class="k">完整 Persona</div><div class="v">600–1200 行 · 三重验证</div></div>
+    <span class="arrow">→</span>
+    <div class="box" data-step="2"><div class="k">轻量风格卡</div><div class="v">写作链路按需调用</div></div>
+  </div>
+
+  <p class="faint" style="margin-top:10px">已蒸馏 / 示例 persona 库：</p>
+  <div class="gallery">
+    <a href="#persona" style="text-decoration:none"><span class="pchip live">戴锦华 ✓ · 查看 persona →</span></a>
+    <span class="pchip">费曼</span><span class="pchip">芒格</span><span class="pchip">Naval</span>
+    <span class="pchip">塔勒布</span><span class="pchip">乔布斯</span><span class="pchip">Paul Graham</span>
+    <span class="pchip">Karpathy</span><span class="pchip">Ilya Sutskever</span><span class="pchip">MrBeast</span>
+  </div>
+</section>
+
+<!-- rules / footer -->
+<section class="wrap">
+  <div class="sec-head"><div class="eyebrow">不可越线的底座</div><h2>事实审慎，是这个 agent 的硬规则</h2></div>
+  <div class="rules">
+    <div class="rule"><h4>不编造</h4><p>不伪造引文、来源、书名、人名、年份、事件或数据；不把推测、联想、印象写成已确认的事实。</p></div>
+    <div class="rule"><h4>会降调</h4><p>信息不足时明确说「不确定 / 需核验 / 这是推断」；影响判断又无法确认的，用「可能是 / 某种程度上」降调表达。</p></div>
+    <div class="rule"><h4>留痕迹</h4><p>初稿/改稿完成后必须生成 <code>fact-check.md</code>；正文中暂时无法核验的内容，明确标记其风险状态。</p></div>
+    <div class="rule"><h4>不伪造风格</h4><p>用户指定的风格若没有对应风格卡，明确说明缺失，绝不自行伪造「像某某」的写法——要么转入蒸馏，要么退回中性中文。</p></div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="tech">
+    <span>单文件 HTML / CSS / JS</span><span>零依赖 · 双击即开</span>
+    <span>真实素材：fragments · runs · style-cards</span><span>女娲蒸馏链路</span>
+  </div>
+  <p>渡言 · Writing Agent — 把思维碎片渡成文章的作品集 Demo。<br>
+  本页内容取自项目真实产物；文章为文化观察类创作，不含需核验的事实声明。</p>
+</footer>
+
+<script>
+/* ---------- waveform ---------- */
+(function(){const w=document.getElementById('wave');for(let i=0;i<40;i++){const b=document.createElement('i');
+  b.style.height=(5+Math.abs(Math.sin(i*0.6))*20+Math.random()*4).toFixed(0)+'px';w.appendChild(b);}})();
+
+/* ---------- 1. align ---------- */
+function runAlign(){
+  const btn=document.getElementById('alignBtn');btn.disabled=true;
+  document.getElementById('funnel').classList.add('active');
+  document.getElementById('funnelHint').innerHTML='正在比对三种模态的语义指向……';
+  const frags=document.querySelectorAll('#fragGrid .frag');
+  frags.forEach((f,i)=>setTimeout(()=>f.classList.add('absorbed'),300+i*260));
+  setTimeout(()=>{document.getElementById('alignBar').style.width='100%';},700);
+  setTimeout(()=>{
+    document.getElementById('funnelHint').innerHTML='✓ 三条碎片并非各说各话，而是共同指向同一个论点：';
+    const v=document.getElementById('verdict');
+    v.innerHTML='「在一个被解释、被规训、被平台格式化的时代里，<b>替自己保留一点无法立刻被命名的生活</b>。」';
+    v.style.opacity='1';
+    frags.forEach(f=>{f.style.display='none'});
+  },2300);
+}
+
+/* ---------- 2. pipeline ---------- */
+const STAGES=[
+  ['Phase 0','风格资产准备','判断是否调用风格卡、用哪张'],
+  ['Phase 1','碎片整理','归并语音/图像/文字，去重排序'],
+  ['Phase 2','方向提炼','定核心论点与切入角度'],
+  ['Phase 3','大纲生成','搭层层递进的结构骨架'],
+  ['Phase 4','初稿生成','审慎表达，不留隐患'],
+  ['Phase 5','风格应用','按风格卡调节句式与气质'],
+  ['Phase 6','改稿与收束','加强推进、批评姿态与结尾'],
+  ['Phase 7','事实回顾','生成 fact-check.md，标注风险']
+];
+(function(){const p=document.getElementById('pipe');STAGES.forEach((s,i)=>{
+  const d=document.createElement('div');d.className='stage';d.id='stg'+i;
+  d.innerHTML=`<span class="state"></span><div class="n">${s[0]}</div><h4>${s[1]}</h4><p>${s[2]}</p>`;
+  p.appendChild(d);});})();
+function runPipeline(){
+  const btn=document.getElementById('runBtn');btn.disabled=true;btn.textContent='运行中…';
+  let i=0;
+  (function next(){
+    if(i>0)document.getElementById('stg'+(i-1)).classList.replace('run','done');
+    if(i>=STAGES.length){
+      document.getElementById('article').classList.add('show');
+      btn.textContent='✓ 已生成文章';
+      setTimeout(()=>document.getElementById('article').scrollIntoView({block:'start'}),400);
+      return;
+    }
+    document.getElementById('stg'+i).classList.add('run');i++;setTimeout(next,620);
+  })();
+}
+
+/* ---------- 3. style switch ---------- */
+const STYLES={
+  default:{badge:['demo','演示稿 · 中性清晰风格'],html:`
+    <p>这份碎片其实在说一件很简单的事：现在的人，越来越需要一点「不必马上被解释」的生活。喜欢异乡的黄昏、神话般的迷路，不喜欢被命名和解释的关系——这些偏好背后，是同一个愿望。</p>
+    <p>四个小提案（便利店月光宴、自创节日、单支花夜游、末班公交小漂流）都很轻，但它们做的是同一件事：让一个普通的夜晚，重新拥有被珍视的资格。仪式感不是花钱，而是你愿不愿意承认这一刻值得。</p>
+    <p>所以真正的主张是：在一个什么都要被定义、被安排、被记录的时代，给自己留一点点偏航的余地。只要这点空间还在，生活就还没有被写死。</p>`},
+  dai:{badge:['real','项目真实成稿 · runs/春夜私人节日/draft-v2'],html:`
+    <p>有时候，一组看上去几乎没有逻辑的「喜欢」和「不喜欢」，反而比任何完整、自洽、可向他人交代的自我介绍，更能泄露一个人真正想要的生活。真正值得追问的，不是这些偏好究竟够不够特别，而是：为什么今天的人，会如此强烈地需要借由这些意象，为自己勾勒一个尚未完全被生活收编的世界？</p>
+    <p>人们迷恋的也许不是这些对象本身，而正是那种尚未被钉死的状态——一种仍可犹疑、仍可偏航、仍可为自己偷偷发明另一种节奏的生活可能。便利店月光宴之所以可贵，不在于青春式的穷开心，而在于它把一种已经稀缺的能力重新带回来了：让一个普通时刻拥有被珍视的资格。它并没有逃离现实，它只是悄悄改写了现实的使用方式。</p>
+    <p>这些私人小提案真正共享的并不是「文艺感」，而是一种对被完全命名的生活的拒绝。人真正争夺的往往不是什么宏大自由，而只是一点仍可不被立刻解释的余地。而只要这一点点空间仍然存在，生活就还没有被彻底写死。</p>`},
+  liu:{badge:['ph','刘擎向 · 风格卡为初版占位，仅保守参考'],html:`
+    <p>我们可以把这份清单看作一个关于「自主性」的问题。一个人对黄昏、迷路、漫无目的的偏爱，与他对「被命名和解释的关系」「规律和命运」的排斥，构成了同一种诉求的正反面：在一个高度被规划的现代生活里，个体如何为自己保留一块未被工具理性殖民的空间。</p>
+    <p>值得辨析的是，这种诉求并不等于浪漫主义式的逃离。四个提案——尤其是「便利店月光宴」——恰恰发生在现实内部：它不取消预算、不取消便利店，而是在既定约束中重新分配意义。这接近于一种「微观的自我立法」：当公共日历无法安放某些私人情绪时，人开始为自己制定只在今晚生效的规则。</p>
+    <p>因此真正的命题或许是：自由在当代未必表现为宏大的选择，而更多表现为对「被即时解释」的延迟权——保留一段尚未被定义、因而仍属于自己的时间。</p>`}
+};
+function setStyle(k){
+  document.querySelectorAll('#styleTabs .tab').forEach(t=>t.classList.toggle('on',t.dataset.k===k));
+  const s=STYLES[k],b=document.getElementById('styleBadge'),body=document.getElementById('styleBody');
+  b.className='badge '+s.badge[0];b.textContent=s.badge[1];
+  body.classList.remove('fade');void body.offsetWidth;body.classList.add('fade');
+  body.innerHTML=s.html;
+}
+document.querySelectorAll('#styleTabs .tab').forEach(t=>t.addEventListener('click',()=>setStyle(t.dataset.k)));
+setStyle('default');
+
+/* ---------- 3.5 persona models ---------- */
+const MODELS=[
+  ['模型 1','从文化对象进入历史与社会结构','不把电影、文本或流行现象当作孤立对象，而总要追问它背后更大的时代结构。',
+    '著作谱系长期把电影与历史、社会、文化研究并置（《返归未来》《雾中风景》《隐形书写》）；访谈讲座里总把作品讨论推进到「我们如何认知世界」。',
+    '若问题只需极短功能性回答，这个模型会显得过重；事实材料不足时强行上升会空泛。'],
+  ['模型 2','电影首先是一种公共艺术','电影的意义不只在银幕内部，更在于它是否仍能构成共同观看、共同感知与共同讨论的公共空间。',
+    '2022 年燕京学堂访谈把电影院称作电影的「身体」；2025 年北大讲座强调电影仍是重要的公共艺术。',
+    '在纯私人创作、极小众实验作品分析时，需结合具体语境，不能机械套用。'],
+  ['模型 3','既不简单回归，也不简单追随','讨论中国经验时，既反对封闭回归，也反对只用现成西方框架解释自身。',
+    '2023 年访谈中明确说中国文化自觉不是回到某个纯粹母体；长期强调「世界的中国与中国的世界」。',
+    '若对象高度地方化、经验材料极少，需要更扎实的在地信息托住。'],
+  ['模型 4','技术值得研究，但不能被技术崇拜遮蔽','关心技术如何改变文化生产、现实感知与主体经验，而不是把技术本身当作答案。',
+    '2025 年北大讲座谈数字技术带来的真实/虚构边界重组与电影本体挑战；批评文化越来越依赖技术与数据、远离思想。',
+    '若问题是纯工程或产品细节，这个模型不能替代技术知识本身。'],
+  ['模型 5','经由「她们」看世界','女性主义不是窄化的身份立场，而是经由被边缘化者重新看见世界结构的方式。',
+    '著作中长期存在女性文学、性别中国、女性电影研究线索；讲演里把「她们」扩展到更广义的他者与不平等结构。',
+    '若误用为单一身份道德控诉，就会丢失她更大的结构视野。']
+];
+(function(){const c=document.getElementById('models');MODELS.forEach((m,i)=>{
+  const d=document.createElement('div');d.className='model';
+  d.innerHTML=`<div class="mh"><span class="mn">${m[0]}</span><h4>${m[1]}</h4></div>
+    <div class="one">${m[2]}</div>
+    <div class="detail"><div><span class="lab">证据：</span>${m[3]}</div>
+    <div style="margin-top:8px"><span class="lab">局限：</span>${m[4]}</div></div>
+    <div class="more">＋ 展开证据与局限</div>`;
+  d.addEventListener('click',()=>{const o=d.classList.toggle('open');
+    d.querySelector('.more').textContent=o?'－ 收起':'＋ 展开证据与局限';});
+  c.appendChild(d);});})();
+
+/* ---------- 4. nuwa: local sources ---------- */
+const SOURCES=[
+  ['📚','books','9'],['📰','articles','6'],['🎙','interviews','3'],
+  ['🏛','lectures','3'],['🎬','media','0'],['🗒','notes','0']
+];
+(function(){const c=document.getElementById('sources');SOURCES.forEach(s=>{
+  const n=+s[2],has=n>0;const d=document.createElement('div');d.className='src'+(has?' has':'');
+  d.innerHTML=`<div class="ic">${s[0]}</div><div class="nm">${s[1]}</div>
+    <div class="ct ${has?'':'empty'}">${has?s[2]+' 份':'待补充'}</div>`;
+  c.appendChild(d);});})();
+
+const TRACKS=[
+  ['01','📚 著作与系统思考','从书与长文里提炼思想骨架'],
+  ['02','💬 深度对话与即兴','看他在对话里如何接话、追问'],
+  ['03','🧬 表达 DNA','句式节奏、用词偏好、修辞习惯'],
+  ['04','🔭 外部评价','别人眼中的他，校正自评偏差'],
+  ['05','⚖ 重大决策','行动里暴露的真实判断标准'],
+  ['06','🗓 生平时间线','思想随时间的演变与转折']
+];
+(function(){const t=document.getElementById('tracks');TRACKS.forEach((s,i)=>{
+  const d=document.createElement('div');d.className='track';d.id='trk'+i;
+  d.innerHTML=`<div class="num">${s[0]}</div><h4>${s[1]}</h4><p>${s[2]}</p><div class="bar"><i></i></div>`;
+  t.appendChild(d);});})();
+function runNuwa(){
+  const btn=document.getElementById('nuwaBtn');btn.disabled=true;btn.textContent='并行调研中…';
+  TRACKS.forEach((s,i)=>{const d=document.getElementById('trk'+i);
+    setTimeout(()=>{d.classList.add('run');d.querySelector('.bar i').style.width='100%';},150+i*120);});
+  const boxes=document.querySelectorAll('#merge .box');
+  setTimeout(()=>boxes[0].classList.add('lit'),300);
+  setTimeout(()=>boxes[1].classList.add('lit'),1700);
+  setTimeout(()=>{boxes[2].classList.add('lit');btn.textContent='✓ 蒸馏完成 → 已生成风格卡';},2700);
+}
+</script>
+</body>
+</html>

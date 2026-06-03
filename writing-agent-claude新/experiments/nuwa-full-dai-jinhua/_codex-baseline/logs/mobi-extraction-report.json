@@ -1,0 +1,16 @@
+[
+  {
+    "source": "sources\\books\\涉渡之舟新时期中国女性写作与女性文化 (文学与当代史丛书) (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).mobi",
+    "status": "ok",
+    "chars": 369558,
+    "output": "extracted-text\\books\\涉渡之舟新时期中国女性写作与女性文化 (文学与当代史丛书) (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\books\\返归未来：银幕上的历史与社会 (三联精选) (戴锦华 王炎著) (z-library.sk, 1lib.sk, z-lib.sk).mobi",
+    "status": "ok",
+    "chars": 134884,
+    "output": "extracted-text\\books\\返归未来：银幕上的历史与社会 (三联精选) (戴锦华 王炎著) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "error": ""
+  }
+]

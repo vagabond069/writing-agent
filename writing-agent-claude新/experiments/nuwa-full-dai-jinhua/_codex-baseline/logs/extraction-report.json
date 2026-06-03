@@ -1,0 +1,191 @@
+[
+  {
+    "source": "sources\\articles\\2月3日 《冯小刚走红之谜》 戴锦华 (2月3日 《冯小刚走红之谜》 戴锦华.txt) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "category": "articles",
+    "extension": ".txt",
+    "status": "ok",
+    "chars": 9979,
+    "output": "extracted-text\\articles\\2月3日 《冯小刚走红之谜》 戴锦华 (2月3日 《冯小刚走红之谜》 戴锦华.txt) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\articles\\daijinhua-weilaideweidu.pdf",
+    "category": "articles",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 14849,
+    "output": "extracted-text\\articles\\daijinhua-weilaideweidu.txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\articles\\dashidai.pdf",
+    "category": "articles",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 4745,
+    "output": "extracted-text\\articles\\dashidai.txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\articles\\duoqizhi youling.pdf",
+    "category": "articles",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 6882,
+    "output": "extracted-text\\articles\\duoqizhi youling.txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\articles\\wuyingzhiying.pdf",
+    "category": "articles",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 8970,
+    "output": "extracted-text\\articles\\wuyingzhiying.txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\articles\\zaixiandezhengzhi.pdf",
+    "category": "articles",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 14260,
+    "output": "extracted-text\\articles\\zaixiandezhengzhi.txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\books\\Dai-Jinhua-guangyingzhisi.pdf",
+    "category": "books",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 6841,
+    "output": "extracted-text\\books\\Dai-Jinhua-guangyingzhisi.txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\books\\昨日之岛 戴锦华电影文章自选集 (戴锦华著) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+    "category": "books",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 1012,
+    "output": "extracted-text\\books\\昨日之岛 戴锦华电影文章自选集 (戴锦华著) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\books\\浮出历史地表  现代妇女文学研究 (孟悦, 戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).epub",
+    "category": "books",
+    "extension": ".epub",
+    "status": "ok",
+    "chars": 2225,
+    "output": "extracted-text\\books\\浮出历史地表 现代妇女文学研究 (孟悦, 戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\books\\涉渡之舟新时期中国女性写作与女性文化 (文学与当代史丛书) (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).mobi",
+    "category": "books",
+    "extension": ".mobi",
+    "status": "unsupported",
+    "chars": 0,
+    "output": "",
+    "error": ""
+  },
+  {
+    "source": "sources\\books\\电影批评 (戴锦华 [戴锦华]) (z-library.sk, 1lib.sk, z-lib.sk).epub",
+    "category": "books",
+    "extension": ".epub",
+    "status": "ok",
+    "chars": 202036,
+    "output": "extracted-text\\books\\电影批评 (戴锦华 [戴锦华]) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\books\\返归未来：银幕上的历史与社会 (三联精选) (戴锦华 王炎著) (z-library.sk, 1lib.sk, z-lib.sk).mobi",
+    "category": "books",
+    "extension": ".mobi",
+    "status": "unsupported",
+    "chars": 0,
+    "output": "",
+    "error": ""
+  },
+  {
+    "source": "sources\\books\\镜与世俗神话：影片精读18例 (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+    "category": "books",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 22,
+    "output": "extracted-text\\books\\镜与世俗神话：影片精读18例 (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\books\\镜城突围：女性·电影·文学 莱曼女性文化书系 (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+    "category": "books",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 686,
+    "output": "extracted-text\\books\\镜城突围：女性·电影·文学 莱曼女性文化书系 (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\books\\隐形书写 90年代中国文化研究 (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+    "category": "books",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 2,
+    "output": "extracted-text\\books\\隐形书写 90年代中国文化研究 (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\interviews\\daijinhua fangtan(2).pdf",
+    "category": "interviews",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 9636,
+    "output": "extracted-text\\interviews\\daijinhua fangtan(2).txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\interviews\\wo bushi yingpingren.pdf",
+    "category": "interviews",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 2670,
+    "output": "extracted-text\\interviews\\wo bushi yingpingren.txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\interviews\\犹在镜中 戴锦华访谈录 (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+    "category": "interviews",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 2,
+    "output": "extracted-text\\interviews\\犹在镜中 戴锦华访谈录 (戴锦华) (z-library.sk, 1lib.sk, z-lib.sk).txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\lectures\\eguo-geming-de-qishi.pdf",
+    "category": "lectures",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 11780,
+    "output": "extracted-text\\lectures\\eguo-geming-de-qishi.txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\lectures\\戴锦华：人类之维.pdf",
+    "category": "lectures",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 19883,
+    "output": "extracted-text\\lectures\\戴锦华：人类之维.txt",
+    "error": ""
+  },
+  {
+    "source": "sources\\lectures\\现场或未来记忆2020830.pdf",
+    "category": "lectures",
+    "extension": ".pdf",
+    "status": "ok",
+    "chars": 6568,
+    "output": "extracted-text\\lectures\\现场或未来记忆2020830.txt",
+    "error": ""
+  }
+]
